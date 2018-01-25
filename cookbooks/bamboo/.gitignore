@@ -1,0 +1,38 @@
+# Ignore all hidden files & folders except gitignore & kitchen
+.*
+!/.gitignore
+!/.kitchen*.yml
+!/.rubocop.yml
+!/.foodcritic
+!/.rspec.yml
+!/.drone.yml
+!/.travis.yml
+
+#
+# Ignore Chef key files and secrets
+#
+*.pem
+data_bags/encrypted_data_bag_secret
+
+#
+# IntelliJ files (https://github.com/github/gitignore/blob/master/Global/IntelliJ.gitignore)
+#
+*.iml
+*.ipr
+*.iws
+.idea/
+
+#
+# OSX
+#
+Icon
+
+# vagrant
+Berksfile.lock
+Gemfile.lock
+/cookbooks
+
+# Bundler
+bin/*
+.kitchen.local.yml
+.kitchen.cloud.yml

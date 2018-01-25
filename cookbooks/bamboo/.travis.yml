@@ -1,0 +1,13 @@
+language: ruby
+rvm:
+  - 2.2.3
+
+sudo: false
+
+cache: bundler
+bundler_args: --without integration
+before_script:
+  - bundle exec berks install
+script: 
+  # - bundle exec knife cookbook test -a -o .
+  - bundle exec rake

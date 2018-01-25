@@ -1,0 +1,76 @@
+{
+  "name": "bamboo",
+  "description": "Installs and configures Bamboo",
+  "long_description": "",
+  "maintainer": "Ramon Makkelie, Stephan Oudmaijer",
+  "maintainer_email": "ramonmakkelie@gmail.com, soudmaijer@gmail.com",
+  "license": "Apache 2.0",
+  "platforms": {
+    "ubuntu": ">= 14.04",
+    "debian": ">= 0.0.0",
+    "centos": ">= 0.0.0",
+    "redhat": ">= 0.0.0",
+    "amazon": ">= 0.0.0"
+  },
+  "dependencies": {
+    "apt": ">= 0.0.0",
+    "ark": ">= 0.0.0",
+    "apache2": "= 3.2.1",
+    "cron": ">= 0.0.0",
+    "patch": ">= 0.0.0",
+    "backup": "= 0.3.0",
+    "database": ">= 0.0.0",
+    "git": ">= 0.0.0",
+    "java": ">= 0.0.0",
+    "monit": ">= 0.0.0",
+    "mysql": "< 8.0",
+    "mysql_connector": ">= 0.0.0",
+    "perl": ">= 0.0.0",
+    "mysql2_chef_gem": ">= 0.0.0",
+    "postgresql": ">= 0.0.0",
+    "build-essential": ">= 0.0.0"
+  },
+  "recommendations": {
+
+  },
+  "suggestions": {
+
+  },
+  "conflicting": {
+
+  },
+  "providing": {
+
+  },
+  "replacing": {
+
+  },
+  "attributes": {
+
+  },
+  "groupings": {
+
+  },
+  "recipes": {
+    "bamboo::default": "Installs/configures Atlassian bamboo server with apache2 and database",
+    "bamboo::server": "Installs/configures Atlassian bamboo server",
+    "bamboo::agent": "Installs/configures an Atlassian bamboo agent",
+    "bamboo::crowd_sso": "Configures user authentication with Atlassian Crowd single sign-on",
+    "bamboo::upgrade": "WIP"
+  },
+  "version": "2.0.8",
+  "source_url": "https://github.com/afklm/bamboo.git",
+  "issues_url": "https://github.com/afklm/bamboo/issues",
+  "privacy": false,
+  "chef_versions": [
+    [
+      "~> 12"
+    ]
+  ],
+  "ohai_versions": [
+
+  ],
+  "gems": [
+
+  ]
+}
