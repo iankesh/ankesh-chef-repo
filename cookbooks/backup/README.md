@@ -6,11 +6,7 @@ Uses the [Backup Ruby Gem](https://github.com/meskyanichi/backup) to perform bac
 
 # Requirements
 
-Tested on Ubuntu Linux with Ruby 1.9.3, but should run on any Unix with Ruby.
-
-Ruby 1.8.7 and 1.9.2 are no longer supported.  If you require the support of
-older Ruby versions, you should use v1.0.0 of this cookbook.  If you want to use
-v4 of the gem, you need to use this version.
+Tested on Ubuntu Linux with Ruby 1.9, but should run on any Unix with Ruby.
 
 # Attributes
 
@@ -18,9 +14,7 @@ See `attributes/default.rb` for default vaules.
 
 * `node['backup']['config_path']` - Where backup configuration data will be stored. Defaults is `/etc/backup`
 * `node['backup']['log_path']` - Where backup logs will be stored. Defaults is `/var/log`
-* `node['backup']['addl_flags']` - Additional flags to pass on to the backup executable, such as `--tmp-path`
 * `node['backup']['model_path']` - Where backup models (definitions) are stored. Default is `node['backup']['config_path']/models`
-* `node['backup']['mount_options']` String or Array of [mount options](https://docs.getchef.com/resource_mount.html#attributes). (example: `["rw", "nfsvers=3"]` would become the comma-delimited string, `rw,nfsvers=3`, passed to the `-o` argument of the `mount` command and inserted into the `<options>` column of `/etc/fstab`).
 * `node['backup']['dependencies']` - An array of arrays of additional dependencies and optional versions needed for backups. The backup gem will inform you about these when the backup runs. (examples: `['fog']`, `[['fog', '1.4.0'], ['s3']]`)
 * `node['backup']['user']` - User that performs backups. Default is root
 * `node['backup']['group']` - Group that performs backups. Default is root
@@ -52,7 +46,7 @@ Creates a backup model with an optional `cron` schedule.
 * `description` - A description for the backup. Default is the same as the name.
 * `definition` - A string (best formed as a heredoc) defining the backup. Will be interpoleted and turned into a model file. Required.
 * `schedule` - A hash of times (minute, hour, day, month, weekday) that will be passed to a [`cron` resource](http://docs.opscode.com/chef/resources.html#cron).
-* `cron_options` - A hash of other options to be passed to the `cron` resource. Includes `:command` (will be set to the generated backup command by default), `:mailto`, `:path`, `:shell`, `:user`. Set `output_log` option to redirect output of the generated backup command  to the log file (by default this output will be ignored).
+* `cron_options` - A hash of other options to be passed to the `cron` resource. Includes `:command` (will be set to the generated backup command by default), `:mailto`, `:path`, `:shell`, `:user`.
 
 ### Example
 
