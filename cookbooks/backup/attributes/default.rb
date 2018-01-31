@@ -20,17 +20,10 @@
 default['backup']['path']         = '/var/backups' # LEGACY
 default['backup']['config_path']  = '/etc/backup'
 default['backup']['log_path']     = '/var/log'
-default['backup']['addl_flags']   = ''
 default['backup']['model_path']   = "#{node['backup']['config_path']}/models"
-default['backup']['mount_options'] = []
-
+default['backup']['dependencies'] = []
 default['backup']['user']         = 'root'
 default['backup']['group']        = 'root'
-
-default['backup']['dependencies'] = []
-default['backup']['version'] = '4.0.2'
-default['backup']['version_from_git?'] = false
-default['backup']['git_repo'] = nil
-default['backup']['upgrade?'] = false
-
+default['backup']['version']      = '3.0.25'
+default['backup']['upgrade?']     = false
 default['backup']['server']       = {}
