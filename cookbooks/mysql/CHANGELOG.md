@@ -2,6 +2,75 @@
 
 This file is used to list changes made in each version of the mysql cookbook.
 
+## 8.5.1 (2017-08-23)
+
+- Fix the remainder of the namespace collision deprecation warnings
+- Remove the class_eval in the action class as this causes issues with some releases of Chef 12
+
+## 8.5.0 (2017-08-23)
+
+- Require Chef 12.7+ since 12.5/12.6 has custom resource action_class issues
+- Resolve several Chef 14 deprecation warnings
+
+## 8.4.0 (2017-05-30)
+
+- Fix client/server install on Amazon Linux and add testing
+- Remove support for Ubuntu Precise since it's EOL
+- Add Amazon Linux testing
+
+## 8.3.1 (2017-04-04)
+
+- Fix an ignoring of 'cookbook' attribute by 'mysql_config' resource
+- Remove unused helper method
+- Call out the supported platform versions in the metadata
+- Switch to Delivery Local and rename the docked config
+- Remove mention of the EOL opensuse 13.x in the readme
+
+## 8.3.0 (2017-03-20)
+- Refactor mysql_service_manager_upstart.rb to eliminate use of cloned resource
+
+## 8.2.0 (2016-12-03)
+
+- Include client development packages on RHEL/SUSE platforms
+
+## 8.1.1 (2016-10-31)
+- Fixing CVE-2016-6662 - Reverting execure bit on mysql config
+
+## 8.1.0 (2016-10-29)
+
+- Drop hardcoded, specific package version logic that broke many users
+
+## 8.0.4 (2016-09-26)
+- Bump debian version
+- Updated packages for 12.04 and 14.04 too
+- Add chef_version metadata
+- Update platforms in the kitchen file
+- Add selinux to the Berksfile for testing
+- Make sure yum repos are setup in local Test Kitchen
+
+## 8.0.3 (2016-09-14)
+- [GH-390] Fix #390 incorrect escaping of initial_root_password
+- Updated package versions for Ubuntu 16.04
+- Testing updates
+
+# v8.0.2 (2016-08-25)
+- Various bug fixed and updates to package version strings
+
+# v8.0.1 (2016-07-20)
+- Fixed a regression in the mysql_client resource where the action was changed from create to install in the 8.0 release
+- Added oracle, opensuse, and opensuseleap as supported platforms in the metadata
+
+# v8.0.0 (2016-07-11)
+
+- Converting from LWRP to custom resources
+- Removing yum-mysql and other dependencies.
+- ^ BREAKING CHANGE: RHELish users are now responsible
+  for including a recipe from the "yum-mysql" or equivalent
+  cookbook before utilizing the mysql_* resources.
+- More thoughtful ChefSpec
+- Renaming "replication" test suite to "smoke"
+- Moving to Inspec
+
 ## v7.2.0 (2016-06-30)
 
 - Support openeSUSE leap
