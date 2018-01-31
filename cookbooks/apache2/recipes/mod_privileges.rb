@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: apache2
-# Recipe:: mod_session_crypto
+# Recipe:: mod_privileges
 #
-# Copyright 2013, OneHealth Solutions, Inc.
+# Copyright 2016, Alexander van Zoest
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,4 +17,10 @@
 # limitations under the License.
 #
 
-apache_module 'session_crypto'
+# https://httpd.apache.org/docs/trunk/mod/mod_privileges.html
+# Available in Apache 2.3 and up, on Solaris 10 and OpenSolaris platforms
+if node['apache']['version'] == '2.4' && node['platform_family'] == 'solaris'
+  apache_module 'privileges'
+else
+  log 'Ignoring apache2::mod_privileges. Not available until apache 2.3 and only on Solaris'
+end

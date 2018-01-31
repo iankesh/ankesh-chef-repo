@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: apache2
-# Recipe:: mod_session_crypto
+# Attributes:: mod_php5
 #
-# Copyright 2013, OneHealth Solutions, Inc.
+# Copyright 2014, Viverae, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-apache_module 'session_crypto'
+default['apache']['mod_php5']['install_method'] = 'package'
+default['apache']['mod_php5']['so_filename'] = 'libphp5.so'
+default['apache']['mod_php5']['so_filename'] = 'mod_php5.so' if node['platform_family'] == 'suse'
+
+if node['platform'] == 'amazon' && node['apache']['version'] == '2.4'
+  default['apache']['mod_php5']['so_filename'] = 'libphp.so'
+end
