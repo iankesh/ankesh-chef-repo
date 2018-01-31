@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: bamboo
-# Recipe:: default
-#
-# Copyright 2014
+# Author:: Seth Chisamore (<schisamo@chef.io>)
+# Author:: Sean OMeara (<sean@sean.io>)
+# Copyright:: 2011-2016, Chef Software, Inc.
+# License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,14 +16,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# execute 'apt-get-update' do
-#   command 'apt-get update'
-#   ignore_failure true
-#   # only_if { platform_family?('debian') }
-# end
 
-#include_recipe 'bamboo::database'
-include_recipe 'bamboo::apache2'
-include_recipe 'bamboo::server'
-include_recipe 'bamboo::crowd_sso' unless node['bamboo']['crowd'] == false
-include_recipe 'bamboo::backup' unless node['bamboo']['backup']['enabled'] == false
+require File.join(File.dirname(__FILE__), 'provider_database_mysql')
+
+class Chef
+  class Resource
+    class MysqlDatabase < Chef::Resource::Database
+      def initialize(name, run_context = nil)
+        super
+        @resource_name = :mysql_database
+        @provider = Chef::Provider::Database::Mysql
+      end
+    end
+  end
+end
