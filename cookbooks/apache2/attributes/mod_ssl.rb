@@ -1,9 +1,9 @@
 #
-# Cookbook:: apache2
+# Cookbook Name:: apache2
 # Attributes:: mod_ssl
 #
-# Copyright:: 2012-2013, Chef Software, Inc.
-# Copyright:: 2014, Viverae, Inc.
+# Copyright 2012-2013, Chef Software, Inc.
+# Copyright 2014, Viverae, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,14 +38,22 @@ default['apache']['mod_ssl']['pkg_name'] = 'mod_ssl'
 
 case node['platform_family']
 when 'debian'
-  if platform?('ubuntu')
-    default['apache']['mod_ssl']['pass_phrase_dialog'] = 'exec:/usr/share/apache2/ask-for-passphrase'
+  case node['platform']
+  when 'ubuntu'
+    if node['apache']['version'] == '2.4'
+      default['apache']['mod_ssl']['pass_phrase_dialog'] = 'exec:/usr/share/apache2/ask-for-passphrase'
+    end
   end
 when 'freebsd'
   default['apache']['mod_ssl']['session_cache'] = 'shmcb:/var/run/ssl_scache(512000)'
   default['apache']['mod_ssl']['mutex'] = 'file:/var/run/ssl_mutex'
-when 'rhel', 'fedora', 'suse', 'amazon'
-  default['apache']['mod_ssl']['pkg_name'] = 'mod24_ssl' if platform?('amazon')
+when 'rhel', 'fedora', 'suse'
+  case node['platform']
+  when 'amazon'
+    if node['apache']['version'] == '2.4'
+      default['apache']['mod_ssl']['pkg_name'] = 'mod24_ssl'
+    end
+  end
   default['apache']['mod_ssl']['session_cache'] = 'shmcb:/var/cache/mod_ssl/scache(512000)'
   default['apache']['mod_ssl']['mutex'] = 'default'
 end

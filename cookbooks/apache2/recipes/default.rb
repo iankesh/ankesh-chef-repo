@@ -1,9 +1,9 @@
 #
-# Cookbook:: apache2
+# Cookbook Name:: apache2
 # Recipe:: default
 #
-# Copyright:: 2008-2017, Chef Software, Inc.
-# Copyright:: 2014-2015, Alexander van Zoest
+# Copyright 2008-2013, Chef Software, Inc.
+# Copyright 2014-2015, Alexander van Zoest
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,6 +44,11 @@ end
   end
 end
 
+directory "#{node['apache']['dir']}/conf.d" do
+  action :delete
+  recursive true
+end
+
 directory node['apache']['log_dir'] do
   mode '0755'
   recursive true
@@ -51,8 +56,6 @@ end
 
 # perl is needed for the a2* scripts
 package node['apache']['perl_pkg']
-
-package 'perl-Getopt-Long-Descriptive' if platform?('fedora')
 
 %w(a2ensite a2dissite a2enmod a2dismod a2enconf a2disconf).each do |modscript|
   link "/usr/sbin/#{modscript}" do
@@ -84,6 +87,7 @@ unless platform_family?('debian')
 end
 
 if platform_family?('freebsd')
+
   directory "#{node['apache']['dir']}/Includes" do
     action :delete
     recursive true
@@ -96,6 +100,7 @@ if platform_family?('freebsd')
 end
 
 if platform_family?('suse')
+
   directory "#{node['apache']['dir']}/vhosts.d" do
     action :delete
     recursive true
@@ -122,7 +127,7 @@ end
 
 directory node['apache']['lock_dir'] do
   mode '0755'
-  if node['platform_family'] == 'debian'
+  if node['platform_family'] == 'debian' && node['apache']['version'] == '2.2'
     owner node['apache']['user']
   else
     owner 'root'
@@ -131,13 +136,13 @@ directory node['apache']['lock_dir'] do
 end
 
 # Set the preferred execution binary - prefork or worker
-template "/etc/sysconfig/#{node['apache']['service_name']}" do
+template "/etc/sysconfig/#{node['apache']['package']}" do
   source 'etc-sysconfig-httpd.erb'
   owner 'root'
   group node['apache']['root_group']
   mode '0644'
   notifies :restart, 'service[apache2]', :delayed
-  only_if  { platform_family?('rhel', 'amazon', 'fedora', 'suse') }
+  only_if  { platform_family?('rhel', 'fedora', 'suse') }
 end
 
 template "#{node['apache']['dir']}/envvars" do
@@ -150,7 +155,7 @@ template "#{node['apache']['dir']}/envvars" do
 end
 
 template 'apache2.conf' do
-  if platform_family?('rhel', 'amazon', 'fedora', 'arch', 'freebsd')
+  if platform_family?('rhel', 'fedora', 'arch', 'freebsd')
     path "#{node['apache']['conf_dir']}/httpd.conf"
   elsif platform_family?('debian')
     path "#{node['apache']['conf_dir']}/apache2.conf"
@@ -176,10 +181,12 @@ apache_conf 'ports' do
   conf_path node['apache']['dir']
 end
 
-if node['apache']['mpm_support'].include?(node['apache']['mpm'])
-  include_recipe "apache2::mpm_#{node['apache']['mpm']}"
-else
-  Chef::Log.warn("apache2: #{node['apache']['mpm']} module is not supported and must be handled separately!")
+if node['apache']['version'] == '2.4'
+  if node['apache']['mpm_support'].include?(node['apache']['mpm'])
+    include_recipe "apache2::mpm_#{node['apache']['mpm']}"
+  else
+    Chef::Log.warn("apache2: #{node['apache']['mpm']} module is not supported and must be handled separately!")
+  end
 end
 
 node['apache']['default_modules'].each do |mod|
@@ -198,7 +205,18 @@ apache_service_name = node['apache']['service_name']
 
 service 'apache2' do
   service_name apache_service_name
+  case node['platform_family']
+  when 'rhel'
+    if node['platform_version'].to_f < 7.0
+      restart_command "/sbin/service #{apache_service_name} restart && sleep 1"
+      reload_command "/sbin/service #{apache_service_name} graceful && sleep 1"
+    end
+  when 'debian'
+    provider Chef::Provider::Service::Debian
+  when 'arch'
+    service_name apache_service_name
+  end
   supports [:start, :restart, :reload, :status]
   action [:enable, :start]
-  only_if "#{node['apache']['binary']} -t", environment: { 'APACHE_LOG_DIR' => node['apache']['log_dir'] }, timeout: 10
+  only_if "#{node['apache']['binary']} -t", :environment => { 'APACHE_LOG_DIR' => node['apache']['log_dir'] }, :timeout => 10
 end

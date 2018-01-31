@@ -1,8 +1,8 @@
 #
-# Cookbook:: apache2
+# Cookbook Name:: apache2
 # Recipe:: mod_ssl
 #
-# Copyright:: 2008-2017, Chef Software, Inc.
+# Copyright 2008-2013, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,15 +22,16 @@ end
 
 include_recipe 'apache2::default'
 
-if platform_family?('rhel', 'fedora', 'suse', 'amazon')
-  package node['apache']['mod_ssl']['pkg_name'] do
-    notifies :run, 'execute[generate-module-list]', :immediately
-    not_if { platform_family?('suse') }
+if platform_family?('rhel', 'fedora', 'suse')
+  if 'suse' != node['platform']
+    package node['apache']['mod_ssl']['pkg_name'] do
+      notifies :run, 'execute[generate-module-list]', :immediately
+    end
   end
 
   file "#{node['apache']['dir']}/conf.d/ssl.conf" do
-    content '# SSL Conf is under mods-available/ssl.conf - apache2 cookbook\n'
-    only_if { ::Dir.exist?("#{node['apache']['dir']}/conf.d") }
+    action :delete
+    backup false
   end
 end
 
@@ -45,4 +46,6 @@ apache_module 'ssl' do
   conf true
 end
 
-include_recipe 'apache2::mod_socache_shmcb'
+if node['apache']['version'] == '2.4'
+  include_recipe 'apache2::mod_socache_shmcb'
+end

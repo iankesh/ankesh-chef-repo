@@ -1,8 +1,8 @@
 #
-# Cookbook:: apache2
+# Cookbook Name:: apache2
 # Recipe:: mod_authn_core
 #
-# Copyright:: 2013, OneHealth Solutions, Inc.
+# Copyright 2013, OneHealth Solutions, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,5 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-apache_module 'authn_core'
+if node['apache']['version'] == '2.4'
+  apache_module 'authn_core'
+else
+  Chef::Log.info('Ignoring apache2::mod_authn_core. not available until apache 2.4')
+end
